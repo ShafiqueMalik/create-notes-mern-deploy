@@ -1,30 +1,31 @@
 {
-  "name": "create-notes",
+  "name": "back-end",
   "version": "1.0.0",
-  "description": "This application is used to take notes for any type of category.",
+  "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
+    "client": "npm start --prefix front-end",
     "dev": "concurrently \"npm start\" \"npm run client\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ShafiqueMalik/create-notes.git"
-  },
-  "keywords": [
-    "create",
-    "notes",
-    "notes",
-    "management"
-  ],
-  "author": "Shafique",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ShafiqueMalik/create-notes/issues"
-  },
-  "homepage": "https://github.com/ShafiqueMalik/create-notes#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.0",
+    "cloudinary": "^1.32.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.1",
+    "express-async-handler": "^1.2.0",
+    "express-fileupload": "^1.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.4",
+    "nodemailer": "^6.8.0",
+    "nodemon": "^2.0.20",
     "concurrently": "^7.6.0"
   }
 }
