@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
-    "client":"npm start --prefix front-end",
     "dev": "concurrently \"npm start\" \"npm run client\""
   },
   "repository": {
