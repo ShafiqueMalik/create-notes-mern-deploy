@@ -14,7 +14,7 @@ const Home = () => {
                     Welcome to Note Cloud
                 </Typography>
                 <Typography textAlign="center" >
-                    Very save place save memories.
+                    Very save place save your notes.
                 </Typography>
                 {!loggedInUser && (
                     <Stack direction="row" gap={8} justifyContent="center" mt={4}>

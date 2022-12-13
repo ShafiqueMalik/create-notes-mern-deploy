@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
+    "devStart": "nodemon index.js",
     "server": "nodemon index.js",
     "client": "npm start --prefix front-end",
-    "dev": "concurrently \"npm start\" \"npm run client\""
+    "dev": "concurrently \"npm run devStart\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
