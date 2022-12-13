@@ -1,6 +1,6 @@
 import HomeModel from "../models/userModel.js";
 import asyncHanlder from "express-async-handler";
-import NoteModel from "../models/NoteModel.js";
+import NoteModel from "../models/noteModel.js";
 
 export const getNotes = asyncHanlder(async (req, res) => {
     const notes = await NoteModel.find({ user: req.user._id });
