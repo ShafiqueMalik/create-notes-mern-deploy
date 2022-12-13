@@ -9,6 +9,7 @@ import { Box, Stack, Button, Chip, Alert } from "@mui/material";
 import { useDeleteNoteMutation, useUpdateNoteMutation } from 'app/api/notesApi';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { dateToDDMMMYYYY } from 'utils/dateTime';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -63,6 +64,7 @@ export default function NotesAccordion({ notes }) {
     const { data: responseData } = await deleteNote(_id);
   }
 
+
   React.useEffect(() => {
     if (isDeleteSuccess) {
       setDeleteSuccess(true);
@@ -110,8 +112,8 @@ export default function NotesAccordion({ notes }) {
             <Typography mb={1.5}>
               {note.content}
             </Typography>
-            <Typography fontSize="13px" sx={{ color: (theme) => theme.palette.grey[600] }}>
-              Create on &#8212; {note.createdAt.substring(0, 10)}
+            <Typography fontSize="13px" sx={{textAlign:"right", color: (theme) => theme.palette.grey[600] }}>
+              Created on &#8212; {dateToDDMMMYYYY(new Date(note.createdAt))}
             </Typography>
 
           </AccordionDetails>
