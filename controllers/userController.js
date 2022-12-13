@@ -1,7 +1,7 @@
-import HomeModel from "../models/userModel.js";
+import HomeModel from "../models/userModel";
 import asyncHanlder from "express-async-handler";
-import UserModel from "../models/userModel.js";
-import { generateJwtToken } from "../utils/generateJwtToken.js";
+import UserModel from "../models/userModel";
+import { generateJwtToken } from "../utils/generateJwtToken";
 import { v2 as cloudinary } from 'cloudinary'
 
 cloudinary.config({ 
