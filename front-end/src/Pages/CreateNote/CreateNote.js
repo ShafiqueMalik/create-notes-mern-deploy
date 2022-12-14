@@ -26,6 +26,7 @@ const CreateNote = () => {
       if (editorRef.current) {
         if (editorRef?.current?.getContent()?.trim() === "") {
           setContentError(true);
+          return;
         } else {
           setContentError(false);
           data.content = editorRef?.current?.getContent()?.trim();
