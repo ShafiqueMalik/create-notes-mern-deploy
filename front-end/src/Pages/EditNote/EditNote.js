@@ -1,28 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import { Typography, Box, TextField, Button, Container, FormGroup, Paper, Alert } from '@mui/material'
+import React, { useState, useEffect, useRef } from 'react'
+import { Typography, Box, TextField, Button, Container, FormGroup, Paper, Alert, IconButton, Autocomplete, FormHelperText } from '@mui/material'
 import FullHeight from 'components/FullHeight/FullHeight'
+
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useLoginMutation } from 'app/api/usersApi'
 import { setLoggedInUser } from 'app/slices/globalSlice'
 import { useDispatch } from 'react-redux'
-import { useCreateNoteMutation, useDeleteNoteMutation, useGetNoteByIdQuery, useUpdateNoteMutation } from 'app/api/notesApi'
+import { useCreateNoteMutation, useDeleteNoteMutation, useGetNoteByIdQuery, useGetNotesQuery, useUpdateNoteMutation } from 'app/api/notesApi'
 
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
+import NoteEditor from 'components/NoteEditor/NoteEditor'
 const EditNote = () => {
     let { id } = useParams();
     console.log(id)
     const [updateNote, { isError: isUpdateError, isSuccess: isUpdateSuccess }] = useUpdateNoteMutation();
     const [deleteNote, { isError: isDeleteError, isSuccess: isDeleteSuccess }] = useDeleteNoteMutation();
+    const { data: notes, isLoading: isNotesLoading, isSuccess: isNotesSuccess, isError: isNotesError } = useGetNotesQuery();
+
+    const [categories, setCategories] = useState([])
 
     const { data: singleNote, isLoading, isSuccess, isError } = useGetNoteByIdQuery(id);
-    console.log(singleNote)
+    const editorRef = useRef(null);
 
     const [success, setSuccess] = useState(false);
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const navigate = useNavigate();
+
+    const [contentError, setContentError] = useState(false);
     const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
     const onSubmit = async (data, e) => {
         try {
+            if (editorRef.current) {
+                if (editorRef?.current?.getContent()?.trim() === "") {
+                    setContentError(true);
+                    return;
+                } else {
+                    setContentError(false);
+                    data.content = editorRef?.current?.getContent()?.trim();
+                }
+            }
             const newData = { ...data, id }
             const { data: responseData } = await updateNote({ ...newData });
             reset();
@@ -54,6 +73,11 @@ const EditNote = () => {
             navigate("/notes")
         }, 3000);
     }
+    useEffect(() => {
+        if (isNotesSuccess) {
+            setCategories(notes?.map(note => note.category));
+        }
+    }, [notes]);
     if (isLoading) {
         return "Loading..."
     }
@@ -72,46 +96,87 @@ const EditNote = () => {
                         px: 5
                     }}>
                         {success && <Alert severity="success">Updated successfully!</Alert>}
+                        <Button color='primary' variant="outlined" sx={{ mb: 1 }}
+                            onClick={() => navigate(-1)}
+                        >
+                            <ArrowBackIosOutlinedIcon />
+                        </Button>
                         <Typography variant="h3" mb={2} color="initial">Edit Note</Typography>
-                       {deleteSuccess ? (
-                        <Alert severity="success">Deleted successfully!</Alert>
-                       ):(
-                         <Box>
-                         <FormGroup sx={{ mb: 2 }}>
-                             <TextField type="text" label="Title" variant="standard"
-                                 defaultValue={singleNote?.title}
-                                 {...register("title", {
-                                     required: true,
-                                 })}
-                                 error={errors?.title}
-                             />
-                         </FormGroup>
-                         <FormGroup sx={{ mb: 2 }}>
-                             <TextField type="textarea" label="Content" multiline rows={3}
-                                 variant="standard"
-                                 defaultValue={singleNote?.content}
+                        {deleteSuccess ? (
+                            <Alert severity="success">Deleted successfully!</Alert>
+                        ) : (
+                            <Box>
+                                <FormGroup sx={{ mb: 2 }}>
+                                    <TextField type="text" label="Title" variant="standard"
+                                        defaultValue={singleNote?.title}
+                                        {...register("title", {
+                                            required: true,
+                                        })}
+                                        error={errors?.title}
+                                    />
+                                </FormGroup>
+                                <FormGroup sx={{ mb: 2 }}>
+                                    {/* <TextField type="textarea" label="Content" multiline rows={3}
+                                        variant="standard"
+                                        defaultValue={singleNote?.content}
 
-                                 {...register("content", {
-                                     required: true,
-                                 })}
-                                 error={errors?.content}
-                             />
-                         </FormGroup>
-                         <FormGroup sx={{ mb: 2 }}>
-                             <TextField type="text" label="Category" variant="standard"
-                                 defaultValue={singleNote?.category}
-                                 {...register("category", {
-                                     required: true,
-                                 })}
-                                 error={errors?.category}
-                             />
-                         </FormGroup>
-                         <Button variant="contained" type='submit'>Update Note</Button>
-                         <Button variant="contained" color="error" type='button' onClick={handleDeleteNote}
-                             sx={{ ml: 2 }}
-                         >Delete Note</Button>
-                     </Box>
-                       )}
+                                        {...register("content", {
+                                            required: true,
+                                        })}
+                                        error={errors?.content}
+                                    /> */}
+                                    <NoteEditor editorRef={editorRef} value={singleNote?.content} />
+                                    {contentError && <FormHelperText sx={{ color: "error.main" }}>This field is required.</FormHelperText>
+                                    }
+                                </FormGroup>
+                                <FormGroup sx={{ mb: 2 }}>
+                                    {/* <TextField type="text" label="Category" variant="standard"
+                                        defaultValue={singleNote?.category}
+                                        {...register("category", {
+                                            required: true,
+                                        })}
+                                        error={errors?.category}
+                                    /> */}
+                                    <Autocomplete
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        options={categories}
+                                        defaultValue={singleNote?.category}
+
+                                        sx={{ width: 300 }}
+                                        renderInput={(params) => <TextField {...params} 
+                                        type="text" 
+                                        variant="standard" label="Category"
+                                        error={errors?.category}
+                                            {...register("category", {
+                                                required: true,
+                                            })}
+                                        />}
+                                    />
+                                </FormGroup>
+                                <Button variant="contained" type='submit'
+                                    sx={{ gap: "5px" }}
+
+                                >
+                                    <Box component="span">Update Note</Box>
+                                    <EditOutlinedIcon />
+                                </Button>
+                                <Button variant="contained" color="error" type='button'
+                                    onClick={handleDeleteNote}
+                                    sx={{ ml: 2, gap: "5px" }}
+                                >
+                                    <Box component="span">Delete Note</Box>
+                                    <DeleteForeverOutlinedIcon />
+                                </Button>
+                                <Button variant="outlined" color="info" type='button'
+                                    onClick={() => navigate(-1)}
+                                    sx={{ ml: 2, gap: "5px" }}
+                                >
+                                    <ArrowBackIosOutlinedIcon />
+                                    <Box component="span">Cancel</Box>
+                                </Button>
+                            </Box>
+                        )}
                     </Box>
                 </Box>
 

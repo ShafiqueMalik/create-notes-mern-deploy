@@ -3,3 +3,10 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+/* hide tinymce warning */
+.tox-tinymce-aux{
+  /* display: none !important; */
+  /* visibility: hidden !important; */
+ 
+}
