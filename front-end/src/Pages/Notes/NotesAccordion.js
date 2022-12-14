@@ -108,7 +108,7 @@ export default function NotesAccordion({ notes }) {
                 <Button variant='outlined' aria-label='delete note'
                   color='error'
                   sx={{ minWidth: "35px", "&:hover": { bgcolor: "currentcolor" }, "&:hover svg": { fill: "white" } }}
-                  onClick={(e) => { }} size="small">
+                  onClick={(e) => handleDeleteClick(e,note)} size="small">
                   <DeleteForeverOutlinedIcon />
                 </Button>
               </Stack>
