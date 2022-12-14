@@ -108,7 +108,7 @@ const CreateNote = () => {
                 /> */}
                 <Autocomplete
                   disablePortal
-                  id="combo-box-demo"
+                  freeSolo
                   options={categories}
                   sx={{ width: 300 }}
                   renderInput={(params) => <TextField {...params} variant="standard" label="Category" 

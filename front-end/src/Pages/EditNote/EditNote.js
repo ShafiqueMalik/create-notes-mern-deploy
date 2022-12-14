@@ -139,7 +139,7 @@ const EditNote = () => {
                                     /> */}
                                     <Autocomplete
                                         disablePortal
-                                        id="combo-box-demo"
+                                        freeSolo
                                         options={categories}
                                         defaultValue={singleNote?.category}
 
