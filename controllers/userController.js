@@ -35,12 +35,16 @@ export const registerUser = asyncHanlder(async (req, res) => {
 
             });
         } else {
-            res.status(400);
-            throw new Error("Error occured while creating the user.");
+            res.status(400).json({
+                status:"error",
+                message:"Something wrong! please signup again."
+            });
         }
     } catch (error) {
-        res.status(400);
-        throw new Error(`Un Expected error occured while creating the user ${error.message}`);
+        res.status(400).json({
+            status:"error",
+            message:`Error: ${error.message}`
+        });
     }
 });
 
@@ -57,17 +61,19 @@ export const loginUser = async (req, res) => {
                 isAdmin:user.isAdmin,
                 pic:user.pic,
                 token:generateJwtToken(user._id),
-                success:true
+                status:"success"
             });
         }else{
             res.status(400).json({
-                error:true,
+                status:"error",
                 message:"Invalid credentials"
             });
         }
     } catch (error) {
-        res.status(400);
-        throw new Error(`Un Expected error occured while login the user ${error.message}`);
+        res.status(400).json({
+            status:"error",
+            message:"Something wrong! Try again please."
+        });
     }
 }
 export const updateUserProfile = async (req, res) => {

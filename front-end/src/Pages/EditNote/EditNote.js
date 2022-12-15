@@ -13,6 +13,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import NoteEditor from 'components/NoteEditor/NoteEditor'
+import { Stack } from '@mui/system'
 const EditNote = () => {
     let { id } = useParams();
     console.log(id)
@@ -21,7 +22,7 @@ const EditNote = () => {
     const { data: notes, isLoading: isNotesLoading, isSuccess: isNotesSuccess, isError: isNotesError } = useGetNotesQuery();
 
     const [categories, setCategories] = useState([])
-
+    const [category, setCategory] = useState("")
     const { data: singleNote, isLoading, isSuccess, isError } = useGetNoteByIdQuery(id);
     const editorRef = useRef(null);
 
@@ -31,7 +32,11 @@ const EditNote = () => {
 
     const [contentError, setContentError] = useState(false);
     const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+
     const onSubmit = async (data, e) => {
+        if(!category){
+            return;
+        }
         try {
             if (editorRef.current) {
                 if (editorRef?.current?.getContent()?.trim() === "") {
@@ -42,7 +47,7 @@ const EditNote = () => {
                     data.content = editorRef?.current?.getContent()?.trim();
                 }
             }
-            const newData = { ...data, id }
+            const newData = { ...data, id,category }
             const { data: responseData } = await updateNote({ ...newData });
             reset();
             navigate("/notes")
@@ -78,6 +83,11 @@ const EditNote = () => {
             setCategories(notes?.map(note => note.category));
         }
     }, [notes]);
+    useEffect(() => {
+        if (singleNote) {
+            setCategory(singleNote.category)
+        }
+    }, [singleNote]);
     if (isLoading) {
         return "Loading..."
     }
@@ -141,40 +151,39 @@ const EditNote = () => {
                                         disablePortal
                                         freeSolo
                                         options={categories}
-                                        defaultValue={singleNote?.category}
-
+                                        value="kkkkk"
                                         sx={{ width: 300 }}
-                                        renderInput={(params) => <TextField {...params} 
-                                        type="text" 
-                                        variant="standard" label="Category"
-                                        error={errors?.category}
-                                            {...register("category", {
-                                                required: true,
-                                            })}
+                                        renderInput={(params) => <TextField {...params}
+                                            type="text"
+                                            variant="standard" label="Category"
+                                            error={category.length===0}
+                                            onChange={(e) => setCategory(e.target.value)}
                                         />}
                                     />
                                 </FormGroup>
-                                <Button variant="contained" type='submit'
-                                    sx={{ gap: "5px" }}
+                                <Stack direction="row" sx={{ gap: { xs: 0.5, sm: 1, lg: 3 } }}>
+                                    <Button variant="contained" type='submit'
+                                        sx={{ gap: "5px" }}
 
-                                >
-                                    <Box component="span">Update Note</Box>
-                                    <EditOutlinedIcon />
-                                </Button>
-                                <Button variant="contained" color="error" type='button'
-                                    onClick={handleDeleteNote}
-                                    sx={{ ml: 2, gap: "5px" }}
-                                >
-                                    <Box component="span">Delete Note</Box>
-                                    <DeleteForeverOutlinedIcon />
-                                </Button>
-                                <Button variant="outlined" color="info" type='button'
-                                    onClick={() => navigate(-1)}
-                                    sx={{ ml: 2, gap: "5px" }}
-                                >
-                                    <ArrowBackIosOutlinedIcon />
-                                    <Box component="span">Cancel</Box>
-                                </Button>
+                                    >
+                                        <Box component="span">Update</Box>
+                                        <EditOutlinedIcon />
+                                    </Button>
+                                    <Button variant="contained" color="error" type='button'
+                                        onClick={handleDeleteNote}
+                                        sx={{ gap: "5px" }}
+                                    >
+                                        <Box component="span">Delete</Box>
+                                        <DeleteForeverOutlinedIcon />
+                                    </Button>
+                                    <Button variant="outlined" color="info" type='button'
+                                        onClick={() => navigate(-1)}
+                                        sx={{ gap: "5px" }}
+                                    >
+                                        <ArrowBackIosOutlinedIcon />
+                                        <Box component="span">Cancel</Box>
+                                    </Button>
+                                </Stack>
                             </Box>
                         )}
                     </Box>

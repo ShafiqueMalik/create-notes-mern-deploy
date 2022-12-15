@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Typography, Box, TextField, Button, Container, FormGroup, Paper, Alert, FormControl, FormLabel, FormHelperText, Autocomplete } from '@mui/material'
+import { Typography, Box, TextField, Button, Container, FormGroup, Paper, Alert, FormControl, FormLabel, FormHelperText, Autocomplete, CircularProgress } from '@mui/material'
 import FullHeight from 'components/FullHeight/FullHeight'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -8,6 +8,8 @@ import { setLoggedInUser } from 'app/slices/globalSlice'
 import { useDispatch } from 'react-redux'
 import { useCreateNoteMutation, useGetNotesQuery } from 'app/api/notesApi'
 import NoteEditor from 'components/NoteEditor/NoteEditor'
+import { Stack } from '@mui/system'
+import LoadingButton from 'components/LoadingButton/LoadingButton'
 
 const CreateNote = () => {
   const [createNote, { isLoading, isError, isSuccess }] = useCreateNoteMutation();
@@ -21,7 +23,6 @@ const CreateNote = () => {
   const editorRef = useRef(null);
 
   const onSubmit = async (data, e) => {
-    console.log("EEEEEEEE")
     try {
       if (editorRef.current) {
         if (editorRef?.current?.getContent()?.trim() === "") {
@@ -33,8 +34,7 @@ const CreateNote = () => {
         }
       }
       const { data: responseData } = await createNote({ ...data });
-      reset();
-      console.log(responseData);
+      navigate("/notes")
     } catch (error) {
       console.log("Error:", error)
     }
@@ -85,12 +85,6 @@ const CreateNote = () => {
                 />
               </FormGroup>
               <FormGroup sx={{ mb: 2 }}>
-                {/* <TextField type="textarea" label="Content" multiline rows={3} variant="standard"
-                  {...register("content", {
-                    required: true,
-                  })}
-                  error={errors?.content}
-                /> */}
                 <FormControl>
                   <FormLabel sx={{ mb: 0 }}>Content</FormLabel>
                   <NoteEditor editorRef={editorRef} />
@@ -100,29 +94,24 @@ const CreateNote = () => {
                 </FormControl>
               </FormGroup>
               <FormGroup sx={{ mb: 2 }}>
-                {/* <TextField type="text" label="Category" variant="standard"
-                  {...register("category", {
-                    required: true,
-                  })}
-                  error={errors?.category}
-                /> */}
                 <Autocomplete
                   disablePortal
                   freeSolo
                   options={categories}
                   sx={{ width: 300 }}
-                  renderInput={(params) => <TextField {...params} variant="standard" label="Category" 
-                  {...register("category", {
-                    required: true,
-                  })}
-                  error={errors?.category}
+                  renderInput={(params) => <TextField {...params} variant="standard" label="Category"
+                    {...register("category", {
+                      required: true,
+                    })}
+                    error={errors?.category}
                   />}
                 />
               </FormGroup>
-              <Button variant="contained" type='submit'>Create Note</Button>
-              <Button variant="contained" color="error" type='button' onClick={() => reset()}
-                sx={{ ml: 2 }}
-              >Reset</Button>
+              <Stack direction="row" gap={1}>
+                <LoadingButton text="Create Note" isLoading={isLoading} variant="contained" type='submit' />
+                <Button variant="contained" color="error" type='button' onClick={() => reset()}
+                >Reset</Button>
+              </Stack>
             </Box>
           </Box>
         </Box>

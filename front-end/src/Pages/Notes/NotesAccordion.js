@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { dateToDDMMMYYYY } from 'utils/dateTime';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import ConfirmationModal from 'components/modals/ConfirmationModal';
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -51,20 +52,33 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 export default function NotesAccordion({ notes }) {
   const [expanded, setExpanded] = React.useState("1");
   const [deleteSuccess, setDeleteSuccess] = React.useState(false);
-  const [deleteNote, { isError: isDeleteError, isSuccess: isDeleteSuccess }] = useDeleteNoteMutation();
+  const [deleteNote, { isLoading: isDeleteLoading, isError: isDeleteError, isSuccess: isDeleteSuccess }] = useDeleteNoteMutation();
   const { searchTerm } = useSelector((state) => state.global);
-
+  const [open, setOpen] = React.useState(false)
   const navigate = useNavigate();
-
+  const [idToDelete, setIdToDelete] = React.useState(0)
   const handleEditClick = async (e, note) => {
     e.stopPropagation();
     navigate(`edit/${note._id}`);
   }
   const handleDeleteClick = async (e, { _id }) => {
     e.stopPropagation();
-    const { data: responseData } = await deleteNote(_id);
-  }
+    setOpen(true)
+    setIdToDelete(_id);
 
+  }
+  const handleDelete = async () => {
+    if (idToDelete) {
+      try {
+        const { data: responseData } = await deleteNote(idToDelete);
+        setIdToDelete(0);
+        setOpen(false)
+      } catch (error) {
+        setOpen(false);
+      }
+
+    }
+  }
 
   React.useEffect(() => {
     if (isDeleteSuccess) {
@@ -83,6 +97,9 @@ export default function NotesAccordion({ notes }) {
         mb: 1.5
       }
     }}>
+      <ConfirmationModal open={open}
+        isLoading={isDeleteLoading}
+        setOpen={() => setOpen(false)} onDelete={handleDelete} />
       {deleteSuccess && <Alert severity="success">Deleted successfully!</Alert>}
       {[...notes]?.reverse()
         ?.filter(filterNote => filterNote.title.toLowerCase().includes(searchTerm.toLowerCase()))?.map((note, idx) => (
@@ -108,7 +125,7 @@ export default function NotesAccordion({ notes }) {
                 <Button variant='outlined' aria-label='delete note'
                   color='error'
                   sx={{ minWidth: "35px", "&:hover": { bgcolor: "currentcolor" }, "&:hover svg": { fill: "white" } }}
-                  onClick={(e) => handleDeleteClick(e,note)} size="small">
+                  onClick={(e) => handleDeleteClick(e, note)} size="small">
                   <DeleteForeverOutlinedIcon />
                 </Button>
               </Stack>
@@ -120,7 +137,7 @@ export default function NotesAccordion({ notes }) {
             }}>
               <Chip size="small" label={note.category} color="info" sx={{ mb: 1 }} />
               <Typography mb={1.5} dangerouslySetInnerHTML={{ __html: note.content }} />
-                {/* <div  />
+              {/* <div  />
               </Typography> */}
               <Typography fontSize="13px" sx={{ textAlign: "right", color: (theme) => theme.palette.grey[600] }}>
                 Created on &#8212; {dateToDDMMMYYYY(new Date(note.createdAt))}

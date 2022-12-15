@@ -6,12 +6,13 @@ import { useRegisterMutation } from 'app/api/usersApi'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { setLoggedInUser } from 'app/slices/globalSlice'
+import AutoCloseAlert from 'components/AutoCloseAlert/AutoCloseAlert'
 
 const Register = ({ history }) => {
-    const [registerUser, { isLoading, isError }] = useRegisterMutation();
+    const [registerUser, { isLoading,isSuccess, isError ,error}] = useRegisterMutation();
     const [pic, setPic] = useState(null);
     const navigate = useNavigate();
-
+    const [unhandleError, setUnhandleError] = useState("");
     const dispatch = useDispatch();
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async (data) => {
@@ -49,16 +50,14 @@ const Register = ({ history }) => {
                     navigate("/notes");
                 }
             }
+            setUnhandleError("");
 
         } catch (error) {
-            console.log("Error:", error)
+            setUnhandleError("Exception occur!, please try again.");
         }
     }
 
 
-    if (isError) {
-        return "Something went wrong..."
-    }
     return (
         <FullHeight sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Container maxWidth="lg">
@@ -70,6 +69,9 @@ const Register = ({ history }) => {
                         p: 5,
                         my: "20px"
                     }}>
+                        {isSuccess && <AutoCloseAlert type="success" message="Successfully login!"/>}
+                        {isError && <AutoCloseAlert message={error?.data?.message}/>}
+                        {unhandleError.length>0 && <AutoCloseAlert message={unhandleError}/>}
                         <Typography variant="h3" color="initial">Register</Typography>
                         <Box>
                             <FormGroup sx={{ mb: 2 }}>

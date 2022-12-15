@@ -8,5 +8,5 @@
 .tox-tinymce-aux{
   /* display: none !important; */
   /* visibility: hidden !important; */
- 
+ max-width: 70% !important;
 }

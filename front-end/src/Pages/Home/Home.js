@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Typography, Container, Button, Stack } from "@mui/material";
 import FullHeight from 'components/FullHeight/FullHeight';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
 const Home = () => {
     const { loggedInUser } = useSelector((state) => state.global);
-
+    const navigate =useNavigate();
+    useEffect(()=>{
+        if(loggedInUser){
+            navigate("/notes")
+        }
+    },[loggedInUser])
     return (
         <FullHeight sx={{ bgcolor: "#ffffff" }}>
             <Container maxWidth="lg">
