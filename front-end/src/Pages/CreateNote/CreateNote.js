@@ -10,6 +10,7 @@ import { useCreateNoteMutation, useGetNotesQuery } from 'app/api/notesApi'
 import NoteEditor from 'components/NoteEditor/NoteEditor'
 import { Stack } from '@mui/system'
 import LoadingButton from 'components/LoadingButton/LoadingButton'
+import MainLoader from 'components/MainLoader/MainLoader'
 
 const CreateNote = () => {
   const [createNote, { isLoading, isError, isSuccess }] = useCreateNoteMutation();
@@ -33,6 +34,7 @@ const CreateNote = () => {
           data.content = editorRef?.current?.getContent()?.trim();
         }
       }
+      debugger;
       const { data: responseData } = await createNote({ ...data });
       navigate("/notes")
     } catch (error) {
@@ -59,8 +61,8 @@ const CreateNote = () => {
   if (isError || isNotesError) {
     return "Something went wrong..."
   }
-  if (isNotesLoading) {
-    return "Loading..."
+  if (isNotesLoading || isLoading) {
+    return <MainLoader/>
   }
   return (
     <FullHeight sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>

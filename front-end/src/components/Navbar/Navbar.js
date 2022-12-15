@@ -12,16 +12,22 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
-import { Container, Tooltip, IconButton, Avatar, Menu, MenuItem, InputBase } from '@mui/material';
+import { Container, Tooltip, IconButton, Avatar, Menu, MenuItem, InputBase, ListItemIcon } from '@mui/material';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import SearchInput from './SearchInput';
 import { useDispatch, useSelector } from 'react-redux';
 import UserProfilePhotoMenu from './UserProfilePhotoMenu';
-
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 const drawerWidth = 240;
 const navItemsData = [{
     text: "My Notes",
-    route: "notes"
+    route: "notes",
+    icon: <DescriptionOutlinedIcon color="primary" />
+}, {
+    text: "Create Note",
+    route: "notes/create-note",
+    icon: <NoteAddOutlinedIcon color="primary" />
 }];
 
 function Navbar(props) {
@@ -47,14 +53,17 @@ function Navbar(props) {
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
             <Typography variant="h6" sx={{ my: 2 }}>
-                MUI
+                <UserProfilePhotoMenu user={user} drawer={false} />
             </Typography>
             <Divider />
             <List>
                 {navItemsData.map((item) => (
-                    <ListItem key={item.text} disablePadding>
-                        <ListItemButton sx={{ textAlign: 'center' }}>
-                            <ListItemText primary={item.text} />
+                    <ListItem key={item.text} disablePadding component={NavLink} to={item.route}>
+                        <ListItemButton>
+                            <ListItemIcon sx={{ minWidth: "40px" }}>
+                                {item.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={item.text} sx={{ color: "common.black" }} />
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -107,16 +116,16 @@ function Navbar(props) {
                                                 position: "relative",
                                                 color: '#fff', px: 1, display: "flex",
                                                 alignItems: "center", textDecoration: "none",
-                                                "&.active::after": {
-                                                    content: '""',
-                                                    display: "block",
-                                                    width: "100%",
-                                                    height: "4px",
-                                                    backgroundColor: "red",
-                                                    position: "absolute",
-                                                    bottom: 0,
-                                                    left: 0,
-                                                }
+                                                // "&.active::after": {
+                                                //     content: '""',
+                                                //     display: "block",
+                                                //     width: "100%",
+                                                //     height: "4px",
+                                                //     backgroundColor: "red",
+                                                //     position: "absolute",
+                                                //     bottom: 0,
+                                                //     left: 0,
+                                                // }
                                             }}>
                                             {item.text}
                                         </Box>

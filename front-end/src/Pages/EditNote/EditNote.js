@@ -14,6 +14,7 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import NoteEditor from 'components/NoteEditor/NoteEditor'
 import { Stack } from '@mui/system'
+import MainLoader from 'components/MainLoader/MainLoader'
 const EditNote = () => {
     let { id } = useParams();
     console.log(id)
@@ -88,8 +89,8 @@ const EditNote = () => {
             setCategory(singleNote.category)
         }
     }, [singleNote]);
-    if (isLoading) {
-        return "Loading..."
+    if (isLoading || isUpdateError || isDeleteError || isNotesLoading) {
+        return <MainLoader/>
     }
     if (isUpdateError) {
         return "Something went wrong..."

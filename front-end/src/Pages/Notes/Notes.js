@@ -4,6 +4,7 @@ import FullHeight from 'components/FullHeight/FullHeight';
 import NotesAccordion from './NotesAccordion';
 import { Link, useNavigate } from "react-router-dom";
 import { useDeleteNoteMutation, useGetNotesQuery } from 'app/api/notesApi';
+import MainLoader from 'components/MainLoader/MainLoader';
 
 
 const Notes = ({ history }) => {
@@ -26,7 +27,7 @@ const Notes = ({ history }) => {
 
 
     if (isLoading) {
-        return "Loading..."
+        return <MainLoader/>
     }
     if (isError) {
         return "something went wrong..."

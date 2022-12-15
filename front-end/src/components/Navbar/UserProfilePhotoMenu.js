@@ -4,20 +4,22 @@ import Box from '@mui/material/Box';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Logout from '@mui/icons-material/Logout';
 
-import { Tooltip, IconButton, Avatar, Menu, MenuItem } from '@mui/material';
+import { Tooltip, IconButton, Avatar, Menu, MenuItem, Typography } from '@mui/material';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedInUser } from 'app/slices/globalSlice';
 
 
 
-function UserProfilePhotoMenu({user}) {
+function UserProfilePhotoMenu({user,drawer=true}) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        if(drawer){
+            setAnchorEl(event.currentTarget);
+        }
     };
     const handleClose = () => {
         setAnchorEl(null);
@@ -30,19 +32,20 @@ function UserProfilePhotoMenu({user}) {
     }
 
     return (
-        <Box sx={{display:"flex"}} className="user-profile-with-menu">
+        <Box sx={{display:"flex",flexDirection:"column",alignItems:"center",gap:1}} className="user-profile-with-menu">
             <Tooltip title="Account settingsss">
                 <IconButton
                     onClick={handleClick}
                     size="small"
-                    sx={{ ml: 2, my: "auto" }}
+                    sx={{ ml: !drawer?0:2, my: "auto",outline:"2px solid", outlineColor:(theme)=>theme.palette.primary.main }}
                     aria-controls={open ? 'account-menu' : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                 >
-                    <Avatar src={user?.pic} sx={{ width: 32, height: 32 }}>S</Avatar>
+                    <Avatar src={user?.pic} sx={{ width: !drawer?60:32, height: !drawer?60:32 }}>S</Avatar>
                 </IconButton>
             </Tooltip>
+               {!drawer && ( <Typography variant="h6" fontSize="16px">{user?.name}</Typography>)}
             <Menu
                 anchorEl={anchorEl}
                 id="account-menu"

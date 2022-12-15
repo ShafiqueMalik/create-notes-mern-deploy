@@ -7,16 +7,19 @@ import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { setLoggedInUser } from 'app/slices/globalSlice'
 import AutoCloseAlert from 'components/AutoCloseAlert/AutoCloseAlert'
+import LoadingButton from 'components/LoadingButton/LoadingButton'
 
 const Register = ({ history }) => {
     const [registerUser, { isLoading,isSuccess, isError ,error}] = useRegisterMutation();
     const [pic, setPic] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [unhandleError, setUnhandleError] = useState("");
     const dispatch = useDispatch();
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async (data) => {
         try {
+            setLoading(true);
             let imageUrl;
             if (data.pic.length) {
                 const formData = new FormData();
@@ -51,8 +54,10 @@ const Register = ({ history }) => {
                 }
             }
             setUnhandleError("");
+            setLoading(false);
 
         } catch (error) {
+            setLoading(false);
             setUnhandleError("Exception occur!, please try again.");
         }
     }
@@ -119,7 +124,8 @@ const Register = ({ history }) => {
                                 // error={errors?.pic}
                                 />
                             </FormGroup>
-                            <Button variant="contained" type="submit">Signup</Button>
+                            {/* <Button variant="contained" type="submit">Signup</Button> */}
+                            <LoadingButton text="Signup" isLoading={loading} variant="contained" type="submit"/>
                             <Typography variant="body2" mt={2}>
                                 Already have an account <Link to="/login">Login Here</Link>
                             </Typography>
