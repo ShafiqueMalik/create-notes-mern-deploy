@@ -151,7 +151,6 @@ const EditNote = () => {
                                         disablePortal
                                         freeSolo
                                         options={categories}
-                                        value="kkkkk"
                                         sx={{ width: 300 }}
                                         renderInput={(params) => <TextField {...params}
                                             type="text"
