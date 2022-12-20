@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import UserProfilePhotoMenu from './UserProfilePhotoMenu';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
+import images from "assets/images"
+import { Stack } from '@mui/system';
 const drawerWidth = 240;
 const navItemsData = [{
     text: "My Notes",
@@ -87,7 +89,7 @@ function Navbar(props) {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography
+                        {/* <Typography
                             variant="h6"
                             component={Link}
                             to="/"
@@ -100,7 +102,12 @@ function Navbar(props) {
                             }}
                         >
                             CREATE(NOTES)
-                        </Typography>
+                        </Typography> */}
+                       <Stack justifyContent="center" sx={{mr:"auto",pr:"20px"}}>
+                       <Box component="img" src={images.logo}
+                        sx={{width:"40px",height:"40px"}}
+                        />
+                       </Stack>
                         {user && (
                             <>
                                 <SearchInput />
