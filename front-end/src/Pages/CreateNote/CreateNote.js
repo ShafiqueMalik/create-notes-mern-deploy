@@ -34,7 +34,6 @@ const CreateNote = () => {
           data.content = editorRef?.current?.getContent()?.trim();
         }
       }
-      debugger;
       const { data: responseData } = await createNote({ ...data });
       navigate("/notes")
     } catch (error) {
@@ -54,7 +53,9 @@ const CreateNote = () => {
 
   useEffect(() => {
     if (isNotesSuccess) {
-      setCategories(notes?.map(note => note.category));
+      // let uniqueCategories = ;
+      // console.log(uniqueCategories)
+      setCategories([...new Set(notes?.map(note => note.category))]);
     }
   }, [notes]);
 
@@ -80,6 +81,7 @@ const CreateNote = () => {
             <Box>
               <FormGroup sx={{ mb: 2 }}>
                 <TextField type="text" label="Title" variant="standard"
+                autoFocus
                   {...register("title", {
                     required: true,
                   })}

@@ -2,6 +2,10 @@ import HomeModel from "../models/userModel.js";
 import asyncHanlder from "express-async-handler";
 import NoteModel from "../models/noteModel.js";
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+
 export const getNotes = asyncHanlder(async (req, res) => {
     const notes = await NoteModel.find({ user: req.user._id });
     res.json(notes);
@@ -15,6 +19,26 @@ export const createNote = asyncHanlder(async (req, res) => {
     } else {
         const note = new NoteModel({ user: req.user._id, title, content, category });
         const createdNote = await note.save();
+
+        //whatsapp messages
+        // setInterval(async () => {
+            const accountSid = process.env.ACCOUNT_SID;
+            const authToken = process.env.WHATSAPP_AUTH_TOKEN;
+            const client = require('twilio')(accountSid, authToken);
+            const notes = await NoteModel.find({ user: req.user._id });
+            console.log(notes)
+            // client.messages
+            //     .create({
+            //         body: 'Demo message from nodejs from note clouds',
+            //         from: 'whatsapp:+14155238886',
+            //         to: 'whatsapp:+923111323500'
+            //     })
+            //     .then(message => console.log(message.sid))
+            //     .done();
+        // }, 5000);
+        //end of whatsapp messages
+
+
         res.status(201).json(createdNote);
     }
 });
@@ -78,4 +102,6 @@ export const deleteNote = asyncHanlder(async (req, res) => {
         res.status(404).json({ status: "error", message: error })
     }
 });
+
+
 

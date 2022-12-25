@@ -136,7 +136,9 @@ export default function NotesAccordion({ notes }) {
               borderRadius: "0 0 10px 10px",
             }}>
               <Chip size="small" label={note.category} color="info" sx={{ mb: 1 }} />
-              <Typography mb={1.5} dangerouslySetInnerHTML={{ __html: note.content }} />
+              <Typography mb={1.5} dangerouslySetInnerHTML={{ __html: note.content }}
+              sx={{"& *":{all:"revert"}}}
+              />
               {/* <div  />
               </Typography> */}
               <Typography fontSize="13px" sx={{ textAlign: "right", color: (theme) => theme.palette.grey[600] }}>

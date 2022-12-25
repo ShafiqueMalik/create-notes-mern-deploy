@@ -81,7 +81,8 @@ const EditNote = () => {
     }
     useEffect(() => {
         if (isNotesSuccess) {
-            setCategories(notes?.map(note => note.category));
+            // setCategories(notes?.map(note => note.category));
+            setCategories([...new Set(notes?.map(note => note.category))]);
         }
     }, [notes]);
     useEffect(() => {
@@ -120,6 +121,7 @@ const EditNote = () => {
                                 <FormGroup sx={{ mb: 2 }}>
                                     <TextField type="text" label="Title" variant="standard"
                                         defaultValue={singleNote?.title}
+                                        autoFocus
                                         {...register("title", {
                                             required: true,
                                         })}

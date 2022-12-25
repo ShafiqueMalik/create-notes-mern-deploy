@@ -12,7 +12,6 @@ dotenv.config();
 import userRoutes from "./routes/userRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
 import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
-
 const app = express();
 
 app.use(fileUpload({
