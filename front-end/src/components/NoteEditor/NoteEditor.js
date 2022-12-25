@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { Box } from '@mui/material';
 
 export default function NoteEditor({ editorRef, value = "" }) {
   // const editorRef = useRef(null);
@@ -9,8 +10,8 @@ export default function NoteEditor({ editorRef, value = "" }) {
     }
   };
   return (
-    <>
-      <Editor
+    <Box sx={{height:"200px"}}>
+      <Editor 
         onInit={(evt, editor) => {
           editorRef.current = editor;
           setTimeout(()=>{
@@ -36,6 +37,6 @@ export default function NoteEditor({ editorRef, value = "" }) {
           statusbar: false
         }}
       />
-    </>
+    </Box>
   );
 }
