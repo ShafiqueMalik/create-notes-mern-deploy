@@ -34,7 +34,12 @@ export default function NoteEditor({ editorRef, value = "" }) {
           //   'removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           toolbar_location: 'bottom',
-          statusbar: false
+          statusbar: false,
+          plugins: 'paste',
+          paste_webkit_styles: 'color font-size',
+          paste_retain_style_properties: 'color font-size',
+
+
         }}
       />
     </Box>
